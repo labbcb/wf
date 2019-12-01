@@ -7,6 +7,7 @@ import (
 	"github.com/labbcb/wf/models"
 	"github.com/spf13/cobra"
 	"os"
+	"strconv"
 )
 
 // queryCmd represents the query command
@@ -17,9 +18,10 @@ var queryCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 		params := []*models.WorkflowQueryParameter{{
-			Submission: submission,
-			Start:      start,
-			End:        end,
+			Submission:          submission,
+			Start:               start,
+			End:                 end,
+			IncludeSubworkflows: strconv.FormatBool(include),
 		}}
 		for _, s := range status {
 			params = append(params, &models.WorkflowQueryParameter{Status: s})
@@ -38,8 +40,11 @@ var queryCmd = &cobra.Command{
 		if format == "json" {
 			fatalOnErr(json.NewEncoder(os.Stdout).Encode(&res))
 		} else {
+			fmt.Printf("%-36s   %-24s   %-24s   %-24s   %-9s   %s\n",
+				"ID", "Submitted", "Started", "Completed", "Status", "Name")
 			for _, r := range res.Results {
-				fmt.Println(r)
+				fmt.Printf("%-36s | %-24s | %-24s | %-24s | %-9s | %s\n",
+					r.ID, r.Submission, r.Start, r.End, r.Status, r.Name)
 			}
 		}
 	},
@@ -47,6 +52,7 @@ var queryCmd = &cobra.Command{
 
 var submission, start, end string
 var status, name []string
+var include bool
 
 func init() {
 	rootCmd.AddCommand(queryCmd)
@@ -56,4 +62,5 @@ func init() {
 	queryCmd.Flags().StringVar(&end, "end", "", "Returns only workflows with an equal or earlier end datetime")
 	queryCmd.Flags().StringArrayVar(&status, "status", nil, "Returns only workflows with the specified status")
 	queryCmd.Flags().StringArrayVar(&name, "name", nil, "Returns only workflows with the specified name")
+	queryCmd.Flags().BoolVar(&include, "include", false, "Include include in results")
 }
