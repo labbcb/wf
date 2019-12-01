@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type IdAndStatus struct {
 	ID     string `json:"id"`
 	Status string `json:"status"`
@@ -12,16 +14,16 @@ type WorkflowQueryParameter struct {
 	Status              string `json:"status,omitempty"`
 	Name                string `json:"name,omitempty"`
 	ID                  string `json:"id,omitempty"`
-	IncludeSubworkflows string `json:"includeSubworkflows"`
+	IncludeSubworkflows string `json:"includeSubworkflows,omitempty"`
 }
 
 type WorkflowQueryResult struct {
-	ID         string `json:"id"`
-	Name       string `json:"name"`
-	Status     string `json:"status"`
-	Submission string `json:"submission"`
-	Start      string `json:"start"`
-	End        string `json:"end"`
+	ID         string    `json:"id"`
+	Name       string    `json:"name"`
+	Status     string    `json:"status"`
+	Submission time.Time `json:"submission"`
+	Start      time.Time `json:"start"`
+	End        time.Time `json:"end"`
 }
 
 type WorkflowQueryResponse struct {

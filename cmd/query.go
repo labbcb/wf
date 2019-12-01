@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	"os"
 	"strconv"
+	"time"
 )
 
 // queryCmd represents the query command
@@ -40,14 +41,35 @@ var queryCmd = &cobra.Command{
 		if format == "json" {
 			fatalOnErr(json.NewEncoder(os.Stdout).Encode(&res))
 		} else {
-			fmt.Printf("%-36s   %-24s   %-24s   %-24s   %-9s   %s\n",
+			fmt.Printf("%-36s   %-19s   %-19s   %-19s   %-9s   %s\n",
 				"ID", "Submitted", "Started", "Completed", "Status", "Name")
 			for _, r := range res.Results {
-				fmt.Printf("%-36s | %-24s | %-24s | %-24s | %-9s | %s\n",
-					r.ID, r.Submission, r.Start, r.End, r.Status, r.Name)
+				if r.Submission.IsZero() {
+					submission = ""
+				} else {
+					submission = formatDateTime(r.Submission)
+				}
+
+				if r.Start.IsZero() {
+					start = ""
+				} else {
+					start = formatDateTime(r.Start)
+				}
+
+				if r.End.IsZero() {
+					end = ""
+				} else {
+					end = formatDateTime(r.End)
+				}
+				fmt.Printf("%-36s | %-19s | %-19s | %-19s | %-9s | %s\n",
+					r.ID, submission, start, end, r.Status, r.Name)
 			}
 		}
 	},
+}
+
+func formatDateTime(time time.Time) string {
+	return time.Format("2006-01-02 15:04:05")
 }
 
 var submission, start, end string
