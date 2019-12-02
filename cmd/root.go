@@ -30,7 +30,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.wf.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default $HOME/.wf.yaml)")
 	rootCmd.PersistentFlags().StringVar(&host, "host", "http://localhost:8000", "Cromwell server URL")
 	rootCmd.PersistentFlags().StringVar(&format, "format", "", "Output format")
 }

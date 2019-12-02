@@ -43,7 +43,8 @@ var queryCmd = &cobra.Command{
 		} else {
 			fmt.Printf("%-36s   %-19s   %-19s   %-19s   %-9s   %s\n",
 				"ID", "Submitted", "Started", "Completed", "Status", "Name")
-			for _, r := range res.Results {
+			for i := len(res.Results) - 1; i >= 0; i-- {
+				r := res.Results[i]
 				if r.Submission.IsZero() {
 					submission = ""
 				} else {
