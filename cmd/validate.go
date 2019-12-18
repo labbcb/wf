@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/labbcb/wf/client"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"os"
 )
 
@@ -17,6 +18,7 @@ var validateCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		workflow := args[0]
 
+		host := viper.GetString("host")
 		c := &client.Client{Host: host}
 		if len(inputs) > 0 {
 			for _, i := range inputs {
@@ -32,6 +34,7 @@ func validate(c *client.Client, workflow, inputs string) {
 	res, err := c.Describe(workflow, inputs)
 	fatalOnErr(err)
 
+	format := viper.GetString("format")
 	if format == "json" {
 		fatalOnErr(json.NewEncoder(os.Stdout).Encode(&res))
 	} else {

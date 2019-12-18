@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/labbcb/wf/client"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"log"
 	"os"
 )
@@ -15,6 +16,7 @@ var inputsCmd = &cobra.Command{
 	Short: "Generate and output a new inputs JSON for this workflow",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		host := viper.GetString("host")
 		c := &client.Client{Host: host}
 		res, err := c.Describe(args[0], "")
 		fatalOnErr(err)

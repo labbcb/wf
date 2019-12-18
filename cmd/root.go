@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile, host, format string
+var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -31,8 +31,12 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default $HOME/.wf.yaml)")
-	rootCmd.PersistentFlags().StringVar(&host, "host", "http://localhost:8000", "Cromwell server URL")
-	rootCmd.PersistentFlags().StringVar(&format, "format", "", "Output format")
+
+	rootCmd.PersistentFlags().String("host", "http://localhost:8000", "Cromwell server URL")
+	viper.BindPFlag("host", rootCmd.PersistentFlags().Lookup("host"))
+
+	rootCmd.PersistentFlags().String("format", "", "Output format")
+	viper.BindPFlag("format", rootCmd.PersistentFlags().Lookup("format"))
 }
 
 // initConfig reads in config file and ENV variables if set.

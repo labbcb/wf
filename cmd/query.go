@@ -6,6 +6,7 @@ import (
 	"github.com/labbcb/wf/client"
 	"github.com/labbcb/wf/models"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"os"
 	"strconv"
 	"time"
@@ -34,10 +35,12 @@ var queryCmd = &cobra.Command{
 			params = append(params, &models.WorkflowQueryParameter{ID: i})
 		}
 
+		host := viper.GetString("host")
 		c := &client.Client{Host: host}
 		res, err := c.Query(params)
 		fatalOnErr(err)
 
+		format := viper.GetString("format")
 		if format == "json" {
 			fatalOnErr(json.NewEncoder(os.Stdout).Encode(&res))
 		} else {

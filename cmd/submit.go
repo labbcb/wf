@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/labbcb/wf/client"
+	"github.com/spf13/viper"
 	"log"
 	"os"
 
@@ -12,13 +13,14 @@ import (
 
 // submitCmd represents the submit command
 var submitCmd = &cobra.Command{
-	Use:   "submit workflow",
+	Use:     "submit workflow",
 	Aliases: []string{"run"},
-	Short: "Submits a workflow to Cromwell",
-	Args:  cobra.ExactArgs(1),
+	Short:   "Submits a workflow to Cromwell",
+	Args:    cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		workflow := args[0]
 
+		host := viper.GetString("host")
 		c := &client.Client{Host: host}
 		res, err := c.Submit(workflow, inputs, imports, options)
 		fatalOnErr(err)
@@ -27,6 +29,7 @@ var submitCmd = &cobra.Command{
 			log.Fatal(res.Status)
 		}
 
+		format := viper.GetString("format")
 		if format == "json" {
 			fatalOnErr(json.NewEncoder(os.Stdout).Encode(&res))
 		} else {
